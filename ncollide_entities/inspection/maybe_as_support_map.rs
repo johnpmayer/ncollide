@@ -31,10 +31,10 @@ pub fn maybe_as_support_map<N, P, V, M, G: ?Sized>(g: &G) -> Option<&SupportMap<
 macro_rules! impl_support_map_repr(
     ($t: ty) => {
         impl<N, P, V, M> Repr<N, P, V, M> for $t
-            where N: Scalar,
-                  P: Point<N, V>,
-                  V: Vect<N>,
-                  M: Isometry<N, P, V> {
+            where N: Scalar + 'static,
+                  P: Point<N, V> + 'static,
+                  V: Vect<N> + 'static,
+                  M: Isometry<P, V> + 'static {
                 #[inline(always)]
                 fn repr(&self) -> ReprDesc {
                     unsafe {

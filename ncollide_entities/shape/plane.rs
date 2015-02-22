@@ -40,7 +40,7 @@ impl<V> Plane<V> {
 }
 
 impl<N, P, V, M> Repr<N, P, V, M> for Plane<V>
-    where V: Send + Sync {
+    where V: Send + Sync + 'static {
     #[inline(always)]
     fn repr(&self) -> ReprDesc {
         unsafe {

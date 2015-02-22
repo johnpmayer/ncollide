@@ -36,10 +36,10 @@ impl<N, P, V, M> Clone for Compound<N, P, V, M>
 }
 
 impl<N, P, V, M> Compound<N, P, V, M>
-    where N: Scalar,
-          P: Point<N, V>,
-          V: Vect<N> + Translate<P>,
-          M: Isometry<N, P, V> {
+    where N: Scalar + 'static,
+          P: Point<N, V> + 'static,
+          V: Vect<N> + Translate<P> + 'static,
+          M: Isometry<P, V> + 'static {
     /// Builds a new compound shape.
     pub fn new(shapes: Vec<(M, Arc<Box<Repr<N, P, V, M>>>)>) -> Compound<N, P, V, M> {
         let mut bvs    = Vec::new();
@@ -66,7 +66,7 @@ impl<N, P, V, M> Compound<N, P, V, M>
 impl<N, P, V, M> Compound<N, P, V, M> {
     /// The shapes of this compound shape.
     #[inline]
-    pub fn shapes(&self) -> &[(M, Arc<Box<Repr<N, P, V, M>>>)] {
+    pub fn shapes(&self) -> &[(M, Arc<Box<Repr<N, P, V, M> + 'static>>)] {
         self.shapes.as_slice()
     }
 

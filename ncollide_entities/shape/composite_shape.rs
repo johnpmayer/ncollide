@@ -52,10 +52,10 @@ impl<N, P, V, M> CompositeShape<N, P, V, M> for Compound<N, P, V, M>
 }
 
 impl<N, P, V, M> CompositeShape<N, P, V, M> for TriMesh<N, P, V>
-    where N: Scalar,
-          P: Point<N, V>,
-          V: Vect<N>,
-          M: Isometry<N, P, V> {
+    where N: Scalar + 'static,
+          P: Point<N, V> + 'static,
+          V: Vect<N> + 'static,
+          M: Isometry<P, V> + 'static {
     #[inline(always)]
     fn map_part_at(&self, i: usize, f: &mut FnMut(&M, &Repr<N, P, V, M>)) {
         let one: M = na::one();
@@ -82,10 +82,10 @@ impl<N, P, V, M> CompositeShape<N, P, V, M> for TriMesh<N, P, V>
 }
 
 impl<N, P, V, M> CompositeShape<N, P, V, M> for Polyline<N, P, V>
-    where N: Scalar,
-          P: Point<N, V>,
-          V: Vect<N>,
-          M: Isometry<N, P, V> {
+    where N: Scalar + 'static,
+          P: Point<N, V> + 'static,
+          V: Vect<N> + 'static,
+          M: Isometry<P, V> + 'static {
     #[inline(always)]
     fn map_part_at(&self, i: usize, f: &mut FnMut(&M, &Repr<N, P, V, M>)) {
         let one: M = na::one();
