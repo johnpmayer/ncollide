@@ -1,4 +1,5 @@
 use std::ops::{Index, IndexMut};
+use std::marker::PhantomData;
 use na;
 use na::{Translate, Rotate, Transform, Dim};
 use math::{Scalar, Point, Vect};
@@ -9,7 +10,8 @@ pub struct Polyline<N, P, V> {
     /// Coordinates of the polyline vertices.
     pub coords:  Vec<P>,
     /// Coordinates of the polyline normals.
-    pub normals: Option<Vec<V>>
+    pub normals: Option<Vec<V>>,
+    n:           PhantomData<N>
 }
 
 impl<N, P, V> Polyline<N, P, V> {
@@ -17,7 +19,8 @@ impl<N, P, V> Polyline<N, P, V> {
     pub fn new(coords: Vec<P>, normals: Option<Vec<V>>) -> Polyline<N, P, V> {
         Polyline {
             coords:  coords,
-            normals: normals
+            normals: normals,
+            n:       PhantomData
         }
     }
 }

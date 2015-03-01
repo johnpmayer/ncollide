@@ -26,8 +26,8 @@ pub fn bezier_curve_at<N, P, V>(control_points: &[P], t: N, cache: &mut Vec<P>) 
         ptr::copy_memory(cache.as_mut_ptr(), control_points.as_ptr(), control_points.len());
     }
 
-    for i in range(1u, control_points.len()) {
-        for j in range(0u, control_points.len() - i) {
+    for i in range(1, control_points.len()) {
+        for j in range(0, control_points.len() - i) {
             cache[j] = cache[j] * t_1 + *cache[j + 1].as_vec() * t;
         }
     }
