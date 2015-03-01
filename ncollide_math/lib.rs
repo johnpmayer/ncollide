@@ -5,6 +5,7 @@ extern crate "nalgebra" as na;
 
 use rand::Rand;
 use std::fmt::Debug;
+use std::marker::{MarkerTrait, PhantomFn};
 use std::ops::{IndexMut, Mul};
 use std::num::FromPrimitive;
 use na::{Pnt1, Pnt2, Pnt3, Pnt4, Vec1, Vec2, Vec3, Vec4, Mat1, Mat3, Iso2, Iso3, Iso4, Identity};
@@ -36,11 +37,11 @@ pub trait Vect<N>: Send                + Sync  + FloatVec<N> +
 pub trait Isometry<N, P, V>: Send           + Sync              + One          +
                              Translation<V> + Rotate<V>         + Translate<P> +
                              Transform<P>   + AbsoluteRotate<V> + Inv          +
-                             Clone + Mul<Self, Output = Self> + Copy + Debug {
+                             Clone + Mul<Self, Output = Self> + Copy + Debug + PhantomFn<N> {
 }
 
 /// Trait implement by vectors that are transformable by the inertia matrix `I`.
-pub trait HasInertiaMatrix<I> { }
+pub trait HasInertiaMatrix<I>: MarkerTrait + PhantomFn<I> { }
 
 impl Scalar for f32 { }
 impl Scalar for f64 { }
