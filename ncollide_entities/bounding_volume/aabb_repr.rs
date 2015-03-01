@@ -6,10 +6,10 @@ use shape::{Ball, Capsule, Compound, Cone, Convex, Cuboid, Cylinder, TriMesh, Po
 use inspection::Repr;
 
 impl<N, P, V, M> HasAABB<P, M> for Repr<N, P, V, M>
-    where N: Scalar,
-          P: Point<N, V>,
-          V: Vect<N> + Translate<P>,
-          M: Isometry<N, P, V> {
+    where N: Scalar + 'static,
+          P: Point<N, V> + 'static,
+          V: Vect<N> + Translate<P> + 'static,
+          M: Isometry<N, P, V> + 'static {
     #[inline]
     fn aabb(&self, m: &M) -> AABB<P> {
         let repr = self.repr();

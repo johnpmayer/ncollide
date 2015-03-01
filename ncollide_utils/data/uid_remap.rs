@@ -1,6 +1,5 @@
 //! A map allowing a slow lookup for arbitrary `usize` and fast lookup for small ones.
 
-use std::marker::PhantomData;
 use std::iter::{FromIterator, IntoIterator};
 use std::ops::Index;
 use std::num::Int;
@@ -262,20 +261,19 @@ impl<O: Clone> UidRemap<O> {
     }
 }
 
-// impl<O> FromIterator<(usize, O)> for UidRemap<O> {
-//     #[inline]
-//     fn from_iter<T>(iter: T) -> UidRemap<O> where T: IntoIterator {
-//         let mut map = UidRemap::new(false);
-//         map.extend(iter);
-//         map
-//     }
-// }
+impl<O> FromIterator<(usize, O)> for UidRemap<O> {
+    #[inline]
+    fn from_iter<Iter: IntoIterator<Item = (usize, O)>>(iter: Iter) -> UidRemap<O> {
+        let mut map = UidRemap::new(false);
+        map.extend(iter.into_iter());
+        map
+    }
+}
 
 impl<O> Extend<(usize, O)> for UidRemap<O> {
     #[inline]
-    fn extend<T: IntoIterator<Item = (usize, O)>>(&mut self, iter: T) {
-        for next in iter {
-            let (k,v) = next;
+    fn extend<Iter: IntoIterator<Item = (usize, O)>>(&mut self, iter: Iter) {
+        for (k, v) in iter.into_iter() {
             let _ = self.insert(k, v);
         }
     }

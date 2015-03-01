@@ -27,7 +27,7 @@ impl<T: PartialEq> Eq for HashablePartialEq<T> { }
 
 impl<T: AsBytes> Hash for HashablePartialEq<T> {
     #[inline]
-    fn hash<H>(&self, state: &mut H) where H: Hasher {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         state.write(self.value.as_bytes())
     }
 }

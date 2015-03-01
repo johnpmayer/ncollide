@@ -7,10 +7,10 @@ use inspection::Repr;
 
 
 impl<N, P, V, M> HasBoundingSphere<N, P, M> for Repr<N, P, V, M>
-    where N: Scalar,
-          P: Point<N, V>,
-          V: Vect<N> + Translate<P>,
-          M: Isometry<N, P, V> {
+    where N: Scalar + 'static,
+          P: Point<N, V> + 'static,
+          V: Vect<N> + Translate<P> + 'static,
+          M: Isometry<N, P, V> + 'static {
     #[inline]
     fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P> {
         let repr = self.repr();
