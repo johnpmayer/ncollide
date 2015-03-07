@@ -86,8 +86,8 @@ pub fn unit_quad<N, P, V>(usubdivs: usize, vsubdivs: usize) -> TriMesh<N, P, V>
     let mut tex_coords = Vec::new();
 
     // create the vertices
-    for i in range(0u, vsubdivs + 1) {
-        for j in range(0u, usubdivs + 1) {
+    for i in range(0, vsubdivs + 1) {
+        for j in range(0, usubdivs + 1) {
             let ni: N = na::cast(i as f64);
             let nj: N = na::cast(j as f64);
 
@@ -115,8 +115,8 @@ pub fn unit_quad<N, P, V>(usubdivs: usize, vsubdivs: usize) -> TriMesh<N, P, V>
         Pnt3::new(i * ws + j, i * ws + (j + 1), (i + 1) * ws + j + 1)
     }
 
-    for i in range(0u, vsubdivs) {
-        for j in range(0u, usubdivs) {
+    for i in range(0, vsubdivs) {
+        for j in range(0, usubdivs) {
             // build two triangles...
             triangles.push(dl_triangle(i as u32, j as u32, (usubdivs + 1) as u32));
             triangles.push(ur_triangle(i as u32, j as u32, (usubdivs + 1) as u32));

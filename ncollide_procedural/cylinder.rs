@@ -36,7 +36,7 @@ pub fn unit_cylinder<N>(nsubdiv: u32) -> TriMesh<N, Pnt3<N>, Vec3<N>>
 
     let len             = indices.len();
     let bottom_start_id = len - (nsubdiv as usize - 2);
-    utils::reverse_clockwising(indices.slice_from_mut(bottom_start_id));
+    utils::reverse_clockwising(&mut indices[bottom_start_id ..]);
 
     let mut indices = utils::split_index_buffer(indices.as_slice());
 
@@ -74,7 +74,7 @@ pub fn unit_cylinder<N>(nsubdiv: u32) -> TriMesh<N, Pnt3<N>, Vec3<N>>
 
     let top_start_id = len - 2 * (nsubdiv as usize - 2);
 
-    for i in indices.slice_to_mut(top_start_id).iter_mut() {
+    for i in indices[.. top_start_id].iter_mut() {
         if i.x.y >= nsubdiv {
             i.x.y = i.x.y - nsubdiv;
         }
@@ -86,13 +86,13 @@ pub fn unit_cylinder<N>(nsubdiv: u32) -> TriMesh<N, Pnt3<N>, Vec3<N>>
         }
     }
 
-    for i in indices.slice_mut(top_start_id, bottom_start_id).iter_mut() {
+    for i in indices[top_start_id .. bottom_start_id].iter_mut() {
         i.x.y = nlen - 2;
         i.y.y = nlen - 2;
         i.z.y = nlen - 2;
     }
 
-    for i in indices.slice_from_mut(bottom_start_id).iter_mut() {
+    for i in indices[bottom_start_id ..].iter_mut() {
         i.x.y = nlen - 1;
         i.y.y = nlen - 1;
         i.z.y = nlen - 1;

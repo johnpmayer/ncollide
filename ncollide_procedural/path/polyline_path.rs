@@ -5,7 +5,7 @@ use math::{Scalar, Point, Vect};
 /// A path with its sample points given by a polyline.
 ///
 /// This will return sequencially each vertex of the polyline.
-pub struct PolylinePath<'a, N, P: 'a, V: 'a> {
+pub struct PolylinePath<'a, N: 'a, P: 'a, V: 'a> {
     curr_len:               N,
     curr_dir:               V,
     curr_pt_id:             usize,

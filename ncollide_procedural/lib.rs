@@ -8,6 +8,8 @@
 #![deny(unused_results)]
 #![warn(unused_imports)]
 #![deny(unused_typecasts)]
+#![feature(core)]
+#![feature(std_misc)]
 #![feature(unsafe_destructor)]
 #![allow(missing_copy_implementations)] // FIXME: deny this.
 #![doc(html_root_url = "http://ncollide.org/doc")]

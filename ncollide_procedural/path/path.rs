@@ -1,3 +1,4 @@
+use std::marker::PhantomFn;
 use trimesh::TriMesh;
 
 /// A sample point and its associated tangent.
@@ -14,7 +15,7 @@ pub enum PathSample<P, V> {
 }
 
 /// A curve sampler.
-pub trait CurveSampler<N, P, V> {
+pub trait CurveSampler<N, P, V> : PhantomFn<N> {
     /// Returns the next sample point.
     fn next(&mut self) -> PathSample<P, V>;
 }
