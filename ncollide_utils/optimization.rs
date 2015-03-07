@@ -1,5 +1,4 @@
 use std::ops::{Add, Sub, Mul};
-use std::num::Float;
 use rand::{self, Rand};
 use na::{Inv, POrd, SquareMat, Outer, Dot, RMul};
 use na;
@@ -82,7 +81,7 @@ pub fn minimize_with_bfgs<N, V, M, F: Fn(&V) -> N, D: Fn(&V) -> V>(
         let mut guess: V = rand::random();
         let shape        = na::shape(&guess);
 
-        for i in range(0u, shape) {
+        for i in range(0, shape) {
             let inbound_guess = domain_min[i] + guess[i] * domain_width[i];
             guess[i] = inbound_guess;
         }
@@ -179,7 +178,7 @@ pub fn bfgs<N, V, M, SS, F: Fn(&V) -> N, D: Fn(&V) -> V>(
             search_dir = -new_dx;
         }
 
-        let _eps: N = Float::epsilon();
+        let _eps: N = Scalar::epsilon();
         let _eps    = _eps * na::cast(100.0);
         if na::sqnorm(&new_dx) <= _eps {
             break;
@@ -252,3 +251,4 @@ mod test {
         assert!(f.d0(o.x, o.y) == -2.0);
     }
 }
+

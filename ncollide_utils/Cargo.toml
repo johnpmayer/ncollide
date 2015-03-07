@@ -10,6 +10,7 @@ path = "lib.rs"
 [dependencies]
 rustc-serialize = "*"
 rand = "0.1"
+rand_macros = "0.1.4"
 
 [dependencies.nalgebra]
 git = "https://github.com/sebcrozet/nalgebra"

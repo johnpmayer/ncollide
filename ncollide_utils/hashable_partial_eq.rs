@@ -1,9 +1,10 @@
-use std::hash::{Hash, Hasher, Writer};
+use std::hash::{Hash, Hasher};
 use AsBytes;
 
 /// A structure that implements `Eq` and is hashable even if the wrapped data implements only
 /// `PartialEq`.
-#[derive(PartialEq, RustcEncodable, RustcDecodable, Clone, Rand, Debug)]
+#[derive(PartialEq, RustcEncodable, RustcDecodable, Clone, Debug)]
+#[derive_Rand]
 pub struct HashablePartialEq<T> {
     value: T
 }
@@ -25,9 +26,9 @@ impl<T> HashablePartialEq<T> {
 
 impl<T: PartialEq> Eq for HashablePartialEq<T> { }
 
-impl<T: AsBytes, H: Hasher + Writer> Hash<H> for HashablePartialEq<T> {
+impl<T: AsBytes> Hash for HashablePartialEq<T> {
     #[inline]
-    fn hash(&self, state: &mut H) {
+    fn hash<H: Hasher>(&self, state: &mut H) {
         state.write(self.value.as_bytes())
     }
 }

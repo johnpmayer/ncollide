@@ -9,7 +9,11 @@
 #![warn(unused_imports)]
 #![deny(unused_typecasts)]
 #![feature(unsafe_destructor)]
-#![feature(old_orphan_check)]
+#![feature(plugin)]
+#![plugin(rand_macros)]
+#![feature(core)]
+#![feature(std_misc)]
+#![feature(collections)]
 #![allow(missing_copy_implementations)] // FIXME: deny this.
 #![doc(html_root_url = "http://ncollide.org/doc")]
 

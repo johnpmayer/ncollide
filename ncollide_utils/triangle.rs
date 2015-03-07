@@ -88,7 +88,7 @@ pub fn is_affinely_dependent_triangle3<P, V, N>(p1: &P, p2: &P, p3: &P) -> bool
     let p1p3 = *p3 - *p1;
 
     // FIXME: use this as nalgebra standard epsilon?
-    let _eps: N = Float::epsilon();
+    let _eps: N = Scalar::epsilon();
     let _eps_tol = _eps * na::cast(100.0f64);
 
     na::approx_eq_eps(&na::sqnorm(&::cross3(&p1p2, &p1p3)), &na::zero(), &(_eps_tol * _eps_tol))
@@ -104,7 +104,7 @@ pub fn is_affinely_dependent_triangle<N, P, V, AV>(p1: &P, p2: &P, p3: &P) -> bo
     let p1p3 = *p3 - *p1;
 
     // FIXME: use this as nalgebra standard epsilon?
-    let _eps: N = Float::epsilon();
+    let _eps: N = Scalar::epsilon();
     let _eps_tol = _eps * na::cast(100.0f64);
 
     na::approx_eq_eps(&na::sqnorm(&na::cross(&p1p2, &p1p3)), &na::zero(), &(_eps_tol * _eps_tol))

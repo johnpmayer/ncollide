@@ -18,6 +18,7 @@ use na::{ApproxEq, Cast, POrd, FloatVec, Translate, UniformSphereSample, Transla
 /// Trait implemented by scalar types.
 pub trait Scalar: Copy + Send + Sync + Debug +
                   BaseFloat + FromPrimitive + ApproxEq<Self> + Cast<f64> + Rand + Bounded {
+  fn epsilon() -> Self;
 }
 
 /// Trait implemented by point types.
@@ -45,8 +46,12 @@ pub trait Isometry<N, P, V>: Send           + Sync              + One          +
 /// Trait implement by vectors that are transformable by the inertia matrix `I`.
 pub trait HasInertiaMatrix<I> : MarkerTrait + PhantomFn<I> { }
 
-impl Scalar for f32 { }
-impl Scalar for f64 { }
+impl Scalar for f32 { 
+  fn epsilon() -> f32 { std::f32::EPSILON }
+}
+impl Scalar for f64 { 
+  fn epsilon() -> f64 { std::f64::EPSILON }
+}
 
 impl<N: Scalar> Point<N, Vec1<N>> for Pnt1<N> { }
 impl<N: Scalar> Point<N, Vec2<N>> for Pnt2<N> { }
