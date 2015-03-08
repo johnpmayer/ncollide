@@ -3,19 +3,20 @@
 use na::{Dim, Pnt2};
 use na;
 use shape::BaseMeshElement;
-
+use std::marker::PhantomData;
 
 /// A segment shape.
 #[derive(PartialEq, Debug, Clone, RustcEncodable, RustcDecodable)]
-pub struct Segment<P> {
+pub struct Segment<N, P> {
     a: P,
-    b: P
+    b: P,
+    params: PhantomData<N>
 }
 
-impl<P: Dim> Segment<P> {
+impl<N, P: Dim> Segment<N, P> {
     /// Creates a new segment from two points.
     #[inline]
-    pub fn new(a: P, b: P) -> Segment<P> {
+    pub fn new(a: P, b: P) -> Segment<N, P> {
         assert!(na::dim::<P>() > 1);
 
         Segment {
@@ -25,7 +26,7 @@ impl<P: Dim> Segment<P> {
     }
 }
 
-impl<P> Segment<P> {
+impl<N, P> Segment<N, P> {
     /// The first point of this segment.
     #[inline]
     pub fn a(&self) -> &P {
@@ -39,9 +40,9 @@ impl<P> Segment<P> {
     }
 }
 
-impl<P: Dim + Copy> BaseMeshElement<Pnt2<usize>, P> for Segment<P> {
+impl<N, P: Dim + Copy> BaseMeshElement<Pnt2<usize>, P> for Segment<N, P> {
     #[inline]
-    fn new_with_vertices_and_indices(vs: &[P], is: &Pnt2<usize>) -> Segment<P> {
+    fn new_with_vertices_and_indices(vs: &[P], is: &Pnt2<usize>) -> Segment<N, P> {
         Segment::new(vs[is.x], vs[is.y])
     }
 }

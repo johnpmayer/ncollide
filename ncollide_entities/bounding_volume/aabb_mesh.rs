@@ -5,14 +5,14 @@ use shape::{BaseMesh, BaseMeshElement, TriMesh, Polyline};
 use math::{Scalar, Point, Vect};
 
 
-impl<N, P, V, M, I, E> HasAABB<P, M> for BaseMesh<N, P, V, I, E>
+impl<N, P, V, M, I, E> HasAABB<N, P, V, M> for BaseMesh<N, P, V, I, E>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> + Translate<P>,
           M: AbsoluteRotate<V> + Transform<P> + Translation<V>,
           E: BaseMeshElement<I, P> {
     #[inline]
-    fn aabb(&self, m: &M) -> AABB<P> {
+    fn aabb(&self, m: &M) -> AABB<N, P, V> {
         let bv              = self.bvt().root_bounding_volume().unwrap();
         let ls_center       = na::orig::<P>() + bv.translation();
         let center          = m.transform(&ls_center);
@@ -23,24 +23,24 @@ impl<N, P, V, M, I, E> HasAABB<P, M> for BaseMesh<N, P, V, I, E>
     }
 }
 
-impl<N, P, V, M> HasAABB<P, M> for TriMesh<N, P, V>
+impl<N, P, V, M> HasAABB<N, P, V, M> for TriMesh<N, P, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> + Translate<P>,
           M: AbsoluteRotate<V> + Transform<P> + Translation<V> {
     #[inline]
-    fn aabb(&self, m: &M) -> AABB<P> {
+    fn aabb(&self, m: &M) -> AABB<N, P, V> {
         self.base_mesh().aabb(m)
     }
 }
 
-impl<N, P, V, M> HasAABB<P, M> for Polyline<N, P, V>
+impl<N, P, V, M> HasAABB<N, P, V, M> for Polyline<N, P, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> + Translate<P>,
           M: AbsoluteRotate<V> + Transform<P> + Translation<V> {
     #[inline]
-    fn aabb(&self, m: &M) -> AABB<P> {
+    fn aabb(&self, m: &M) -> AABB<N, P, V> {
         self.base_mesh().aabb(m)
     }
 }

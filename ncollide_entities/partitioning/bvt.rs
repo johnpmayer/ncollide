@@ -8,12 +8,13 @@ use partitioning::{BVTVisitor, BVTTVisitor, BVTCostFn};
 use bounding_volume::BoundingVolume;
 use utils::data::ref_with_cost::RefWithCost;
 use math::{Scalar, Vect};
-
+use std::marker::PhantomData;
 
 /// A Boundig Volume Tree.
 #[derive(Clone, RustcEncodable, RustcDecodable)]
-pub struct BVT<B, BV> {
-    tree: Option<BVTNode<B, BV>>
+pub struct BVT<N, V, B, BV> {
+    tree: Option<BVTNode<B, BV>>,
+    params: PhantomData<(N,V)>
 }
 
 /// A node of the bounding volume tree.
@@ -34,13 +35,13 @@ pub enum BinaryPartition<B, BV> {
     Parts(Vec<(B, BV)>, Vec<(B, BV)>)
 }
 
-impl<B, BV> BVT<B, BV> {
+impl<N, V, B, BV> BVT<N, V, B, BV> {
     // FIXME: add higher level constructors ?
     /// Builds a bounding volume tree using an user-defined construction function.
     pub fn new_with_partitioner<F: FnMut(usize, Vec<(B, BV)>) -> (BV, BinaryPartition<B, BV>)>
       (leaves:      Vec<(B, BV)>,
        partitioner: &mut F)
-          -> BVT<B, BV> {
+          -> BVT<N, V, B, BV> {
         if leaves.len() == 0 {
             BVT {
                 tree: None
@@ -62,7 +63,7 @@ impl<B, BV> BVT<B, BV> {
     }
 
     /// Visits the bounding volume traversal tree implicitely formed with `other`.
-    pub fn visit_bvtt<Vis: BVTTVisitor<B, BV>>(&self, other: &BVT<B, BV>, visitor: &mut Vis) {
+    pub fn visit_bvtt<Vis: BVTTVisitor<B, BV>>(&self, other: &BVT<N, V, B, BV>, visitor: &mut Vis) {
         match (&self.tree, &other.tree) {
             (&Some(ref ta), &Some(ref tb)) => ta.visit_bvtt(tb, visitor),
             _ => { }
@@ -74,7 +75,7 @@ impl<B, BV> BVT<B, BV> {
     /// Performs a best-fist-search on the tree.
     ///
     /// Returns the content of the best leaf nound, and a result of user-defined type.
-    pub fn best_first_search<'a, N, BFS, R>(&'a self, algorithm: &mut BFS) -> Option<(&'a B, R)>
+    pub fn best_first_search<'a, BFS, R>(&'a self, algorithm: &mut BFS) -> Option<(&'a B, R)>
         where N:   Scalar,
               BFS: BVTCostFn<N, B, BV, R> {
         match self.tree {
@@ -105,13 +106,13 @@ impl<B, BV> BVT<B, BV> {
     }
 }
 
-#[old_impl_check]
-impl<N, V, B, BV> BVT<B, BV>
+
+impl<N, V, B, BV> BVT<N, V, B, BV>
     where N:  Scalar,
           V:  Vect<N>,
           BV: Translation<V> + BoundingVolume<N> + Clone {
     /// Creates a balanced `BVT`.
-    pub fn new_balanced(leaves: Vec<(B, BV)>) -> BVT<B, BV> {
+    pub fn new_balanced(leaves: Vec<(B, BV)>) -> BVT<N, V, B, BV> {
         BVT::new_with_partitioner(leaves, &mut median_partitioner)
     }
 }

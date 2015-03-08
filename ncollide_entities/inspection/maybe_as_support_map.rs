@@ -12,7 +12,7 @@ pub fn support_map_repr_id<P, V, M>() -> TypeId {
 
 /// Converts a shape descriptor to a support map if possible.
 #[inline]
-pub fn maybe_repr_desc_as_support_map<'a, P, V, M>(desc: ReprDesc<'a>) -> Option<&'a (SupportMap<P, V, M> + 'a)> {
+pub fn maybe_repr_desc_as_support_map<'a, N, P, V, M>(desc: ReprDesc<N, P, V, M>) -> Option<&'a (SupportMap<P, V, M> + 'a)> {
     if desc.repr_id() == support_map_repr_id::<P, V, M>() {
         Some(unsafe { mem::transmute(desc.repr()) })
     }
@@ -36,7 +36,7 @@ macro_rules! impl_support_map_repr(
                   V: Vect<N>,
                   M: Isometry<N, P, V> {
                 #[inline(always)]
-                fn repr(&self) -> ReprDesc {
+                fn repr(&self) -> ReprDesc<N, P, V, M> {
                     unsafe {
                         ReprDesc::new(
                             TypeId::of::<$t>(),
@@ -52,8 +52,8 @@ macro_rules! impl_support_map_repr(
 impl_support_map_repr!(Ball<N>);
 impl_support_map_repr!(Capsule<N>);
 impl_support_map_repr!(Cone<N>);
-impl_support_map_repr!(Convex<P>);
-impl_support_map_repr!(Cuboid<V>);
+impl_support_map_repr!(Convex<N, P>);
+impl_support_map_repr!(Cuboid<N, V>);
 impl_support_map_repr!(Cylinder<N>);
-impl_support_map_repr!(Segment<P>);
-impl_support_map_repr!(Triangle<P>);
+impl_support_map_repr!(Segment<N, P>);
+impl_support_map_repr!(Triangle<N, P>);

@@ -5,12 +5,12 @@ use shape::Plane;
 use math::{Scalar, Point};
 
 
-#[old_impl_check]
-impl<N, P, V, M> HasAABB<P, M> for Plane<V>
+
+impl<N, P, V, M> HasAABB<N, P, V, M> for Plane<N, V>
     where N: Scalar,
           P: Point<N, V> {
     #[inline]
-    fn aabb(&self, _: &M) -> AABB<P> {
+    fn aabb(&self, _: &M) -> AABB<N, P, V> {
         // we divide by 2.0  so that we can still make some operations with it (like loosening)
         // without breaking the box.
         let max: P = Bounded::max_value();

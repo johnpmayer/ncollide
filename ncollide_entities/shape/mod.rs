@@ -44,26 +44,26 @@ mod composite_shape;
  *
  */
 #[doc = "A 2D ball."] pub type Ball2<N> = Ball<N>;
-#[doc = "A 2D plane."] pub type Plane2<N> = Plane<Vec2<N>>;
-#[doc = "A 2D cuboid."] pub type Cuboid2<N> = Cuboid<Vec2<N>>;
+#[doc = "A 2D plane."] pub type Plane2<N> = Plane<N, Vec2<N>>;
+#[doc = "A 2D cuboid."] pub type Cuboid2<N> = Cuboid<N, Vec2<N>>;
 #[doc = "A 2D capsule."] pub type Capsule2<N> = Capsule<N>;
 #[doc = "A 2D cone."] pub type Cone2<N> = Cone<N>;
 #[doc = "A 2D cylinder."] pub type Cylinder2<N> = Cylinder<N>;
-#[doc = "A 2D convex polytope."] pub type Convex2<N> = Convex<Pnt2<N>>;
-#[doc = "A 2D segment."] pub type Segment2<N> = Segment<Pnt2<N>>;
-#[doc = "A 2D triangle."] pub type Triangle2<N> = Triangle<Pnt2<N>>;
+#[doc = "A 2D convex polytope."] pub type Convex2<N> = Convex<N, Pnt2<N>>;
+#[doc = "A 2D segment."] pub type Segment2<N> = Segment<N, Pnt2<N>>;
+#[doc = "A 2D triangle."] pub type Triangle2<N> = Triangle<N, Pnt2<N>>;
 #[doc = "A 2D polyline."] pub type Polyline2<N> = Polyline<N, Pnt2<N>, Vec2<N>>;
 #[doc = "A 2D compound shape."] pub type Compound2<N> = Compound<N, Pnt2<N>, Vec2<N>, Iso2<N>>;
 
 #[doc = "A 3D ball."] pub type Ball3<N> = Ball<N>;
-#[doc = "A 3D plane."] pub type Plane3<N> = Plane<Vec3<N>>;
-#[doc = "A 3D cuboid."] pub type Cuboid3<N> = Cuboid<Vec3<N>>;
+#[doc = "A 3D plane."] pub type Plane3<N> = Plane<N, Vec3<N>>;
+#[doc = "A 3D cuboid."] pub type Cuboid3<N> = Cuboid<N, Vec3<N>>;
 #[doc = "A 3D capsule."] pub type Capsule3<N> = Capsule<N>;
 #[doc = "A 3D cone."] pub type Cone3<N> = Cone<N>;
 #[doc = "A 3D cylinder."] pub type Cylinder3<N> = Cylinder<N>;
-#[doc = "A 3D convex polytope."] pub type Convex3<N> = Convex<Pnt3<N>>;
-#[doc = "A 3D segment."] pub type Segment3<N> = Segment<Pnt3<N>>;
-#[doc = "A 3D triangle."] pub type Triangle3<N> = Triangle<Pnt3<N>>;
+#[doc = "A 3D convex polytope."] pub type Convex3<N> = Convex<N, Pnt3<N>>;
+#[doc = "A 3D segment."] pub type Segment3<N> = Segment<N, Pnt3<N>>;
+#[doc = "A 3D triangle."] pub type Triangle3<N> = Triangle<N, Pnt3<N>>;
 #[doc = "A 3D polyline."] pub type Polyline3<N> = Polyline<N, Pnt3<N>, Vec3<N>>;
 #[doc = "A 3D triangle mesh."] pub type TriMesh3<N> = TriMesh<N, Pnt3<N>, Vec3<N>>;
 #[doc = "A 3D compound shape."] pub type Compound3<N> = Compound<N, Pnt3<N>, Vec3<N>, Iso3<N>>;

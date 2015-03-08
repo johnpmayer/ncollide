@@ -3,20 +3,21 @@
 use na::{Dim, Pnt3};
 use na;
 use shape::BaseMeshElement;
-
+use std::marker::PhantomData;
 
 /// A triangle shape.
 #[derive(PartialEq, Debug, Clone, RustcEncodable, RustcDecodable)]
-pub struct Triangle<P> {
+pub struct Triangle<N, P> {
     a: P,
     b: P,
-    c: P
+    c: P,
+    params: PhantomData<N>
 }
 
-impl<P: Dim> Triangle<P> {
+impl<N, P: Dim> Triangle<N, P> {
     /// Creates a triangle from three points.
     #[inline]
-    pub fn new(a: P, b: P, c: P) -> Triangle<P> {
+    pub fn new(a: P, b: P, c: P) -> Triangle<N, P> {
         assert!(na::dim::<P>() > 1);
 
         Triangle {
@@ -27,7 +28,7 @@ impl<P: Dim> Triangle<P> {
     }
 }
 
-impl<P> Triangle<P> {
+impl<N, P> Triangle<N, P> {
     /// The fist point of this triangle.
     #[inline]
     pub fn a(&self) -> &P {
@@ -47,9 +48,9 @@ impl<P> Triangle<P> {
     }
 }
 
-impl<P: Copy + Dim> BaseMeshElement<Pnt3<usize>, P> for Triangle<P> {
+impl<N, P: Copy + Dim> BaseMeshElement<Pnt3<usize>, P> for Triangle<N, P> {
     #[inline]
-    fn new_with_vertices_and_indices(vs: &[P], is: &Pnt3<usize>) -> Triangle<P> {
+    fn new_with_vertices_and_indices(vs: &[P], is: &Pnt3<usize>) -> Triangle<N, P> {
         Triangle::new(vs[is.x], vs[is.y], vs[is.z])
     }
 }

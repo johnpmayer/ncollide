@@ -5,14 +5,14 @@ use shape::Segment;
 use math::{Scalar, Point, Vect};
 
 
-#[old_impl_check]
-impl<N, P, V, M> HasBoundingSphere<N, P, M> for Segment<P>
+
+impl<N, P, V, M> HasBoundingSphere<N, P, V, M> for Segment<N, P>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N>,
           M: Transform<P> {
     #[inline]
-    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P> {
+    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P, V> {
         let pts = [ self.a().clone(), self.b().clone() ];
         let (center, radius) = bounding_volume::point_cloud_bounding_sphere(pts.as_slice());
 

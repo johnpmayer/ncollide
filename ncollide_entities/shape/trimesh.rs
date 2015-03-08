@@ -9,7 +9,7 @@ use math::{Scalar, Point, Vect};
 
 /// Shape commonly known as a 2d line strip or a 3d triangle mesh.
 pub struct TriMesh<N, P, V> {
-    mesh: BaseMesh<N, P, V, Pnt3<usize>, Triangle<P>>
+    mesh: BaseMesh<N, P, V, Pnt3<usize>, Triangle<N, P>>
 }
 
 impl<N, P, V> Clone for TriMesh<N, P, V>
@@ -40,7 +40,7 @@ impl<N, P, V> TriMesh<N, P, V>
 impl<N, P, V> TriMesh<N, P, V> {
     /// The base representation of this mesh.
     #[inline]
-    pub fn base_mesh(&self) -> &BaseMesh<N, P, V, Pnt3<usize>, Triangle<P>> {
+    pub fn base_mesh(&self) -> &BaseMesh<N, P, V, Pnt3<usize>, Triangle<N, P>> {
         &self.mesh
     }
 
@@ -52,7 +52,7 @@ impl<N, P, V> TriMesh<N, P, V> {
 
     /// Bounding volumes of the subsimplices.
     #[inline]
-    pub fn bounding_volumes(&self) -> &[AABB<P>] {
+    pub fn bounding_volumes(&self) -> &[AABB<N, P, V>] {
         self.mesh.bounding_volumes()
     }
 
@@ -76,7 +76,7 @@ impl<N, P, V> TriMesh<N, P, V> {
 
     /// The acceleration structure used for efficient collision detection and ray casting.
     #[inline]
-    pub fn bvt(&self) -> &BVT<usize, AABB<P>> {
+    pub fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>> {
         self.mesh.bvt()
     }
 }
@@ -84,7 +84,7 @@ impl<N, P, V> TriMesh<N, P, V> {
 impl<N, P: Send + Sync + Copy + Dim, V> TriMesh<N, P, V> {
     /// Gets the i-th mesh element.
     #[inline]
-    pub fn triangle_at(&self, i: usize) -> Triangle<P> {
+    pub fn triangle_at(&self, i: usize) -> Triangle<N, P> {
         self.mesh.element_at(i)
     }
 }

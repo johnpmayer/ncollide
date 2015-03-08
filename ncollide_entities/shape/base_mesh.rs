@@ -5,7 +5,7 @@ use na::{Translate, Identity, Pnt2};
 use partitioning::BVT;
 use bounding_volume::{HasAABB, AABB};
 use math::{Scalar, Point, Vect};
-
+use std::marker::PhantomData;
 
 /// Trait implemented by elements usable on the Mesh.
 pub trait BaseMeshElement<I, P> {
@@ -15,12 +15,13 @@ pub trait BaseMeshElement<I, P> {
 
 /// A mesh generic wrt. the contained mesh elements characterized by vertices.
 pub struct BaseMesh<N, P, V, I, E> {
-    bvt:      BVT<usize, AABB<P>>,
-    bvs:      Vec<AABB<P>>,
+    bvt:      BVT<N, V, usize, AABB<N, P, V>>,
+    bvs:      Vec<AABB<N, P, V>>,
     vertices: Arc<Vec<P>>,
     indices:  Arc<Vec<I>>,
     uvs:      Option<Arc<Vec<Pnt2<N>>>>,
     normals:  Option<Arc<Vec<V>>>,
+    params:   PhantomData<E>
 }
 
 impl<N, P, V, I, E> Clone for BaseMesh<N, P, V, I, E>
@@ -43,7 +44,7 @@ impl<N, P, V, I, E> BaseMesh<N, P, V, I, E>
     where N: Scalar,
           P: Point<N, V>,
           V: Translate<P> + Vect<N>,
-          E: BaseMeshElement<I, P> + HasAABB<P, Identity> {
+          E: BaseMeshElement<I, P> + HasAABB<N, P, V, Identity> {
     /// Builds a new mesh.
     pub fn new(vertices: Arc<Vec<P>>,
                indices:  Arc<Vec<I>>,
@@ -93,7 +94,7 @@ impl<N, P, V, I, E> BaseMesh<N, P, V, I, E> {
 
     /// Bounding volumes of the subsimplices.
     #[inline]
-    pub fn bounding_volumes(&self) -> &[AABB<P>] {
+    pub fn bounding_volumes(&self) -> &[AABB<N, P, V>] {
         self.bvs.as_slice()
     }
 
@@ -117,7 +118,7 @@ impl<N, P, V, I, E> BaseMesh<N, P, V, I, E> {
 
     /// The acceleration structure used for efficient collision detection and ray casting.
     #[inline]
-    pub fn bvt(&self) -> &BVT<usize, AABB<P>> {
+    pub fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>> {
         &self.bvt
     }
 }

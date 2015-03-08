@@ -5,8 +5,8 @@ use shape::Segment;
 use math::{Scalar, Point, Vect};
 
 
-#[old_impl_check]
-impl<N, P, V, M> SupportMap<P, V, M> for Segment<P>
+
+impl<N, P, V, M> SupportMap<P, V, M> for Segment<N, P>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N>,
@@ -24,7 +24,7 @@ impl<N, P, V, M> SupportMap<P, V, M> for Segment<P>
     }
 }
 
-impl<P, V, M> PreferedSamplingDirections<V, M> for Segment<P> {
+impl<N, P, V, M> PreferedSamplingDirections<V, M> for Segment<N, P> {
     #[inline(always)]
     fn sample(&self, _: &M, _: &mut FnMut(V)) {
     }

@@ -1,5 +1,6 @@
 //! Axis Aligned Bounding Box.
 
+use std::marker::{PhantomData, PhantomFn};
 use std::ops::Neg;
 use na::{Translation, POrd, Translate, Bounded};
 use na;
@@ -7,26 +8,27 @@ use bounding_volume::BoundingVolume;
 use math::{Scalar, Point, Vect};
 
 /// Trait of objects that can be bounded by an AABB.
-pub trait HasAABB<P, M> {
+pub trait HasAABB<N, P, V, M>: PhantomFn<(N, V)> {
     /// The object’s AABB.
-    fn aabb(&self, &M) -> AABB<P>;
+    fn aabb(&self, &M) -> AABB<N, P, V>;
 }
 
 /// An Axis Aligned Bounding Box.
 #[derive(Debug, PartialEq, Clone, RustcEncodable, RustcDecodable)]
-pub struct AABB<P> {
+pub struct AABB<N, P, V> {
     mins: P,
-    maxs: P
+    maxs: P,
+    params: PhantomData<(N,V)>
 }
 
-impl<P: POrd> AABB<P> {
+impl<N, P: POrd, V> AABB<N, P, V> {
     /// Creates a new AABB.
     ///
     /// # Arguments:
     ///   * `mins` - position of the point with the smallest coordinates.
     ///   * `maxs` - position of the point with the highest coordinates. Each component of `mins`
     ///   must be smaller than the related components of `maxs`.
-    pub fn new(mins: P, maxs: P) -> AABB<P> {
+    pub fn new(mins: P, maxs: P) -> AABB<N, P, V> {
         assert!(na::partial_le(&mins, &maxs));
 
         AABB {
@@ -36,12 +38,12 @@ impl<P: POrd> AABB<P> {
     }
 }
 
-impl<P: Neg<Output = P> + POrd + Bounded> AABB<P> {
+impl<N, P: Neg<Output = P> + POrd + Bounded, V> AABB<N, P, V> {
     /// Creates an invalid AABB with:
     /// * `mins = Bounded::max_value()`
     /// * `maxs = Bounded::max_value()`.
     /// This is useful to build aabb using merges.
-    pub fn new_invalid() -> AABB<P> {
+    pub fn new_invalid() -> AABB<N, P, V> {
         let _max: P = Bounded::max_value();
         AABB {
             mins: Bounded::max_value(),
@@ -50,7 +52,7 @@ impl<P: Neg<Output = P> + POrd + Bounded> AABB<P> {
     }
 }
 
-impl<P> AABB<P> {
+impl<N, P, V> AABB<N, P, V> {
     /// Reference to the AABB point with the smallest components along each axis.
     #[inline]
     pub fn mins(&self) -> &P {
@@ -64,8 +66,8 @@ impl<P> AABB<P> {
     }
 }
 
-#[old_impl_check]
-impl<N, P, V> AABB<P>
+
+impl<N, P, V> AABB<N, P, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> {
@@ -82,30 +84,30 @@ impl<N, P, V> AABB<P>
     }
 }
 
-#[old_impl_check]
-impl<N, P, V> BoundingVolume<N> for AABB<P>
+
+impl<N, P, V> BoundingVolume<N> for AABB<N, P, V>
     where N: Scalar,
           P: Point<N, V> {
     #[inline]
-    fn intersects(&self, other: &AABB<P>) -> bool {
+    fn intersects(&self, other: &AABB<N, P, V>) -> bool {
         na::partial_le(&self.mins, &other.maxs) &&
         na::partial_ge(&self.maxs, &other.mins)
     }
 
     #[inline]
-    fn contains(&self, other: &AABB<P>) -> bool {
+    fn contains(&self, other: &AABB<N, P, V>) -> bool {
         na::partial_le(&self.mins, &other.mins) &&
         na::partial_ge(&self.maxs, &other.maxs)
     }
 
     #[inline]
-    fn merge(&mut self, other: &AABB<P>) {
+    fn merge(&mut self, other: &AABB<N, P, V>) {
         self.mins = na::inf(&self.mins, &other.mins);
         self.maxs = na::sup(&self.maxs, &other.maxs);
     }
 
     #[inline]
-    fn merged(&self, other: &AABB<P>) -> AABB<P> {
+    fn merged(&self, other: &AABB<N, P, V>) -> AABB<N, P, V> {
         AABB {
             mins: na::inf(&self.mins, &other.mins),
             maxs: na::sup(&self.maxs, &other.maxs)
@@ -120,7 +122,7 @@ impl<N, P, V> BoundingVolume<N> for AABB<P>
     }
 
     #[inline]
-    fn loosened(&self, amount: N) -> AABB<P> {
+    fn loosened(&self, amount: N) -> AABB<N, P, V> {
         assert!(amount >= na::zero(), "The loosening margin must be positive.");
         AABB {
             mins: self.mins.sub_s(&amount),
@@ -137,15 +139,15 @@ impl<N, P, V> BoundingVolume<N> for AABB<P>
     }
 
     #[inline]
-    fn tightened(&self, amount: N) -> AABB<P> {
+    fn tightened(&self, amount: N) -> AABB<N, P, V> {
         assert!(amount >= na::zero(), "The tightening margin must be positive.");
 
         AABB::new(self.mins.add_s(&amount), self.maxs.sub_s(&amount))
     }
 }
 
-#[old_impl_check]
-impl<N, P, V> Translation<V> for AABB<P>
+
+impl<N, P, V> Translation<V> for AABB<N, P, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> + Translate<P> {
@@ -166,7 +168,7 @@ impl<N, P, V> Translation<V> for AABB<P>
     }
 
     #[inline]
-    fn append_translation(&self, dv: &V) -> AABB<P> {
+    fn append_translation(&self, dv: &V) -> AABB<N, P, V> {
         AABB::new(self.mins + *dv, self.maxs + *dv)
     }
 
@@ -176,7 +178,7 @@ impl<N, P, V> Translation<V> for AABB<P>
     }
 
     #[inline]
-    fn prepend_translation(&self, dv: &V) -> AABB<P> {
+    fn prepend_translation(&self, dv: &V) -> AABB<N, P, V> {
         self.append_translation(dv)
     }
 

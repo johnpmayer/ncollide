@@ -11,7 +11,7 @@ pub fn composite_shape_repr_id<N, P, V, M>() -> TypeId {
 
 /// Converts a shape to a composite shape if possible.
 #[inline]
-pub fn maybe_repr_desc_as_composite_shape<'a, N, P, V, M>(desc: ReprDesc<'a>) -> Option<&'a (CompositeShape<N, P, V, M> + 'a)> {
+pub fn maybe_repr_desc_as_composite_shape<'a, N, P, V, M>(desc: ReprDesc<N, P, V, M>) -> Option<&'a (CompositeShape<N, P, V, M> + 'a)> {
     if desc.repr_id() == composite_shape_repr_id::<N, P, V, M>() {
         Some(unsafe { mem::transmute(desc.repr()) })
     }
@@ -35,7 +35,7 @@ macro_rules! impl_composite_shape_repr(
                   V: Vect<N>,
                   M: Isometry<N, P, V> {
                 #[inline(always)]
-                fn repr(&self) -> ReprDesc {
+                fn repr(&self) -> ReprDesc<N, P, V, M> {
                     unsafe {
                         ReprDesc::new(
                             TypeId::of::<$t>(),

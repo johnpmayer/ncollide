@@ -5,14 +5,14 @@ use bounding_volume::{HasAABB, AABB};
 use shape::Cuboid;
 use math::{Scalar, Point};
 
-#[old_impl_check]
-impl<N, P, V: Clone, M> HasAABB<P, M> for Cuboid<V>
+
+impl<N, P, V: Clone, M> HasAABB<N, P, V, M> for Cuboid<N, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Neg<Output = V>,
           M: Translate<P> + AbsoluteRotate<V> {
     #[inline]
-    fn aabb(&self, m: &M) -> AABB<P> {
+    fn aabb(&self, m: &M) -> AABB<N, P, V> {
         let center          = m.translate(&na::orig());
         let ws_half_extents = m.absolute_rotate(self.half_extents());
 

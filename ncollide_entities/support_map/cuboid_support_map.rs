@@ -6,8 +6,8 @@ use support_map::{SupportMap, PreferedSamplingDirections};
 use math::{Scalar, Point, Vect};
 
 
-#[old_impl_check]
-impl<N, P, V, M> SupportMap<P, V, M> for Cuboid<V>
+
+impl<N, P, V, M> SupportMap<P, V, M> for Cuboid<N, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N>,
@@ -19,7 +19,7 @@ impl<N, P, V, M> SupportMap<P, V, M> for Cuboid<V>
         let mut pres: P = na::orig();
 
         let he = self.half_extents();
-        for i in range(0u, na::dim::<P>()) {
+        for i in range(0, na::dim::<P>()) {
             if local_dir[i] < na::zero() {
                 pres[i] = -he[i];
             }
@@ -32,7 +32,7 @@ impl<N, P, V, M> SupportMap<P, V, M> for Cuboid<V>
     }
 }
 
-impl<V: Clone, M> PreferedSamplingDirections<V, M> for Cuboid<V>
+impl<N, V: Clone, M> PreferedSamplingDirections<V, M> for Cuboid<N, V>
     where V: Basis + Neg<Output = V>,
           M: Rotate<V> {
     #[inline(always)]

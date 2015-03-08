@@ -1,27 +1,27 @@
 use std::mem;
 use std::any::TypeId;
 use std::raw::TraitObject;
-use std::marker::ContravariantLifetime;
+use std::marker::{PhantomData, PhantomFn};
 
 #[derive(Copy)]
-pub struct ReprDesc<'a> {
+pub struct ReprDesc<N, P, V, M> {
     type_id: TypeId,
     repr_id: TypeId,
     repr:    TraitObject,
-    life:    ContravariantLifetime<'a>
+    params:  PhantomData<(N, P, V, M)>
 }
 
-impl<'a> ReprDesc<'a> {
+impl<'a, N, P, V, M> ReprDesc<N, P, V, M> {
     /// Creates a new representation descriptor.
     ///
     /// This is unsafe as there is no way to check that the given triple of data are valid.
     #[inline]
-    pub unsafe fn new(type_id: TypeId, repr_id: TypeId, repr: TraitObject) -> ReprDesc<'a> {
+    pub unsafe fn new(type_id: TypeId, repr_id: TypeId, repr: TraitObject) -> ReprDesc<N, P, V, M> {
         ReprDesc {
             type_id: type_id,
             repr_id: repr_id,
             repr:    repr,
-            life:    ContravariantLifetime
+            params:  PhantomData
         }
     }
 
@@ -56,7 +56,7 @@ impl<'a> ReprDesc<'a> {
 }
 
 /// An object with a unique runtime geometric representation.
-pub trait Repr<N, P, V, M>: Send + Sync {
+pub trait Repr<N, P, V, M>: Send + Sync + PhantomFn<(N, P, V, M)> {
     /// Gets a reference to this object's main representation.
-    fn repr<'a>(&'a self) -> ReprDesc<'a>;
+    fn repr<'a>(&'a self) -> ReprDesc<N, P, V, M>;
 }

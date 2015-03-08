@@ -5,13 +5,13 @@ use shape::{Ball, Capsule, Compound, Cone, Convex, Cuboid, Cylinder, TriMesh, Po
             Segment, Triangle};
 use inspection::Repr;
 
-impl<N, P, V, M> HasAABB<P, M> for Repr<N, P, V, M>
+impl<N, P, V, M> HasAABB<N, P, V, M> for Repr<N, P, V, M>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> + Translate<P>,
           M: Isometry<N, P, V> {
     #[inline]
-    fn aabb(&self, m: &M) -> AABB<P> {
+    fn aabb(&self, m: &M) -> AABB<N, P, V> {
         let repr = self.repr();
 
         if let Some(b) = repr.downcast_ref::<Ball<N>>() {
@@ -26,10 +26,10 @@ impl<N, P, V, M> HasAABB<P, M> for Repr<N, P, V, M>
         else if let Some(c) = repr.downcast_ref::<Cone<N>>() {
             c.aabb(m)
         }
-        else if let Some(c) = repr.downcast_ref::<Convex<P>>() {
+        else if let Some(c) = repr.downcast_ref::<Convex<N, P>>() {
             c.aabb(m)
         }
-        else if let Some(c) = repr.downcast_ref::<Cuboid<V>>() {
+        else if let Some(c) = repr.downcast_ref::<Cuboid<N, V>>() {
             c.aabb(m)
         }
         else if let Some(c) = repr.downcast_ref::<Cylinder<N>>() {
@@ -41,13 +41,13 @@ impl<N, P, V, M> HasAABB<P, M> for Repr<N, P, V, M>
         else if let Some(p) = repr.downcast_ref::<Polyline<N, P, V>>() {
             p.aabb(m)
         }
-        else if let Some(p) = repr.downcast_ref::<Plane<V>>() {
+        else if let Some(p) = repr.downcast_ref::<Plane<N, V>>() {
             p.aabb(m)
         }
-        else if let Some(s) = repr.downcast_ref::<Segment<P>>() {
+        else if let Some(s) = repr.downcast_ref::<Segment<N, P>>() {
             s.aabb(m)
         }
-        else if let Some(t) = repr.downcast_ref::<Triangle<P>>() {
+        else if let Some(t) = repr.downcast_ref::<Triangle<N, P>>() {
             t.aabb(m)
         }
         else {

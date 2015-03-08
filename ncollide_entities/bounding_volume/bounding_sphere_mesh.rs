@@ -5,38 +5,38 @@ use shape::{BaseMesh, BaseMeshElement, TriMesh, Polyline};
 use math::{Scalar, Point, Vect};
 
 
-impl<N, P, V, M, I, E> HasBoundingSphere<N, P, M> for BaseMesh<N, P, V, I, E>
+impl<N, P, V, M, I, E> HasBoundingSphere<N, P, V, M> for BaseMesh<N, P, V, I, E>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N>,
           M: Transform<P>,
           E: BaseMeshElement<I, P> {
     #[inline]
-    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P> {
+    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P, V> {
         let (center, radius) = bounding_volume::point_cloud_bounding_sphere(self.vertices().as_slice());
 
         BoundingSphere::new(m.transform(&center), radius)
     }
 }
 
-impl<N, P, V, M> HasBoundingSphere<N, P, M> for TriMesh<N, P, V>
+impl<N, P, V, M> HasBoundingSphere<N, P, V, M> for TriMesh<N, P, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N>,
           M: Transform<P> {
     #[inline]
-    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P> {
+    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P, V> {
         self.base_mesh().bounding_sphere(m)
     }
 }
 
-impl<N, P, V, M> HasBoundingSphere<N, P, M> for Polyline<N, P, V>
+impl<N, P, V, M> HasBoundingSphere<N, P, V, M> for Polyline<N, P, V>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N>,
           M: Transform<P> {
     #[inline]
-    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P> {
+    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P, V> {
         self.base_mesh().bounding_sphere(m)
     }
 }

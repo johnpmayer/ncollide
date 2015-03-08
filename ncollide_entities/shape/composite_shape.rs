@@ -19,9 +19,9 @@ pub trait CompositeShape<N, P, V, M> {
 
     // FIXME: the following two methods really are not generic enough.
     /// Gets the AABB of the shape identified by the index `i`.
-    fn aabb_at(&self, i: usize) -> &AABB<P>;
+    fn aabb_at(&self, i: usize) -> &AABB<N, P, V>;
     /// Gets the acceleration structure of the concave shape.
-    fn bvt(&self) -> &BVT<usize, AABB<P>>;
+    fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>>;
 }
 
 impl<N, P, V, M> CompositeShape<N, P, V, M> for Compound<N, P, V, M>
@@ -41,12 +41,12 @@ impl<N, P, V, M> CompositeShape<N, P, V, M> for Compound<N, P, V, M>
     }
 
     #[inline]
-    fn aabb_at(&self, i: usize) -> &AABB<P> {
+    fn aabb_at(&self, i: usize) -> &AABB<N, P, V> {
         &self.bounding_volumes()[i]
     }
 
     #[inline]
-    fn bvt(&self) -> &BVT<usize, AABB<P>> {
+    fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>> {
         self.bvt()
     }
 }
@@ -71,12 +71,12 @@ impl<N, P, V, M> CompositeShape<N, P, V, M> for TriMesh<N, P, V>
     }
 
     #[inline]
-    fn aabb_at(&self, i: usize) -> &AABB<P> {
+    fn aabb_at(&self, i: usize) -> &AABB<N, P, V> {
         &self.bounding_volumes()[i]
     }
 
     #[inline]
-    fn bvt(&self) -> &BVT<usize, AABB<P>> {
+    fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>> {
         self.bvt()
     }
 }
@@ -101,12 +101,12 @@ impl<N, P, V, M> CompositeShape<N, P, V, M> for Polyline<N, P, V>
     }
 
     #[inline]
-    fn aabb_at(&self, i: usize) -> &AABB<P> {
+    fn aabb_at(&self, i: usize) -> &AABB<N, P, V> {
         &self.bounding_volumes()[i]
     }
 
     #[inline]
-    fn bvt(&self) -> &BVT<usize, AABB<P>> {
+    fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>> {
         self.bvt()
     }
 }

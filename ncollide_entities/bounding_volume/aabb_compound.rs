@@ -4,13 +4,13 @@ use bounding_volume::{AABB, HasAABB};
 use shape::Compound;
 use math::{Scalar, Point, Vect};
 
-impl<N, P, V, M, M2> HasAABB<P, M2> for Compound<N, P, V, M>
+impl<N, P, V, M, M2> HasAABB<N, P, V, M2> for Compound<N, P, V, M>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> + Translate<P>,
           M2: Transform<P> + AbsoluteRotate<V> {
     #[inline]
-    fn aabb(&self, m: &M2) -> AABB<P> {
+    fn aabb(&self, m: &M2) -> AABB<N, P, V> {
         let bv              = self.bvt().root_bounding_volume().unwrap();
         let ls_center       = na::orig::<P>() + bv.translation();
         let center          = m.transform(&ls_center);

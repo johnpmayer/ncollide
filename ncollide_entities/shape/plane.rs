@@ -1,7 +1,8 @@
 //! Support mapping based Plane shape.
 use std::any::Any;
-use std::mem;
 use std::any::TypeId;
+use std::marker::PhantomData;
+use std::mem;
 use na;
 use na::Norm;
 use inspection::{Repr, ReprDesc};
@@ -9,24 +10,25 @@ use math::Scalar;
 
 /// SupportMap description of a plane.
 #[derive(PartialEq, Debug, Clone, RustcEncodable, RustcDecodable)]
-pub struct Plane<V> {
+pub struct Plane<N, V> {
     /// The plane normal.
-    normal: V
+    normal: V,
+    params: PhantomData<N>
 }
 
-#[old_impl_check]
-impl<N: Scalar, V: Norm<N>> Plane<V> {
+
+impl<N: Scalar, V: Norm<N>> Plane<N, V> {
     /// Builds a new plane from its center and its normal.
     #[inline]
-    pub fn new(normal: V) -> Plane<V> {
+    pub fn new(normal: V) -> Plane<N, V> {
         unsafe { Plane::new_normalized(na::normalize(&normal)) }
     }
 }
 
-impl<V> Plane<V> {
+impl<N, V> Plane<N, V> {
     /// Builds a new plane from its center and its normal.
     #[inline]
-    pub unsafe fn new_normalized(normal: V) -> Plane<V> {
+    pub unsafe fn new_normalized(normal: V) -> Plane<N, V> {
         Plane {
             normal: normal
         }
@@ -39,13 +41,13 @@ impl<V> Plane<V> {
     }
 }
 
-impl<N, P, V, M> Repr<N, P, V, M> for Plane<V>
+impl<N, P, V, M> Repr<N, P, V, M> for Plane<N, V>
     where V: Send + Sync {
     #[inline(always)]
-    fn repr(&self) -> ReprDesc {
+    fn repr(&self) -> ReprDesc<N, P, V, M> {
         unsafe {
             ReprDesc::new(
-                TypeId::of::<Plane<V>>(),
+                TypeId::of::<Plane<N, V>>(),
                 TypeId::of::<&Any>(),
                 mem::transmute(self as &Any)
             )

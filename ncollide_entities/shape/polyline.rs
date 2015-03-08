@@ -10,7 +10,7 @@ use math::{Scalar, Point, Vect};
 
 /// Shape commonly known as a 2d line strip or a 3d segment mesh.
 pub struct Polyline<N, P, V> {
-    mesh: BaseMesh<N, P, V, Pnt2<usize>, Segment<P>>
+    mesh: BaseMesh<N, P, V, Pnt2<usize>, Segment<N, P>>
 }
 
 impl<N, P, V> Clone for Polyline<N, P, V>
@@ -41,7 +41,7 @@ impl<N, P, V> Polyline<N, P, V>
 impl<N, P, V> Polyline<N, P, V> {
     /// The base representation of this mesh.
     #[inline]
-    pub fn base_mesh(&self) -> &BaseMesh<N, P, V, Pnt2<usize>, Segment<P>> {
+    pub fn base_mesh(&self) -> &BaseMesh<N, P, V, Pnt2<usize>, Segment<N, P>> {
         &self.mesh
     }
 
@@ -53,7 +53,7 @@ impl<N, P, V> Polyline<N, P, V> {
 
     /// Bounding volumes of the subsimplices.
     #[inline]
-    pub fn bounding_volumes(&self) -> &[AABB<P>] {
+    pub fn bounding_volumes(&self) -> &[AABB<N, P, V>] {
         self.mesh.bounding_volumes()
     }
 
@@ -77,7 +77,7 @@ impl<N, P, V> Polyline<N, P, V> {
 
     /// The acceleration structure used for efficient collision detection and ray casting.
     #[inline]
-    pub fn bvt(&self) -> &BVT<usize, AABB<P>> {
+    pub fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>> {
         self.mesh.bvt()
     }
 }
@@ -85,7 +85,7 @@ impl<N, P, V> Polyline<N, P, V> {
 impl<N, P: Send + Sync + Copy + Dim, V> Polyline<N, P, V> {
     /// Gets the i-th mesh element.
     #[inline]
-    pub fn segment_at(&self, i: usize) -> Segment<P> {
+    pub fn segment_at(&self, i: usize) -> Segment<N, P> {
         self.mesh.element_at(i)
     }
 }

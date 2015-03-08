@@ -17,8 +17,8 @@ use inspection::Repr;
 /// delta transformation to shift or rotate it with regard to the other shapes.
 pub struct Compound<N, P, V, M> {
     shapes:  Vec<(M, Arc<Box<Repr<N, P, V, M>>>)>,
-    bvt:     BVT<usize, AABB<P>>,
-    bvs:     Vec<AABB<P>>
+    bvt:     BVT<N, V, usize, AABB<N, P, V>>,
+    bvs:     Vec<AABB<N, P, V>>
 }
 
 impl<N, P, V, M> Clone for Compound<N, P, V, M>
@@ -72,19 +72,19 @@ impl<N, P, V, M> Compound<N, P, V, M> {
 
     /// The optimization structure used by this compound shape.
     #[inline]
-    pub fn bvt(&self) -> &BVT<usize, AABB<P>> {
+    pub fn bvt(&self) -> &BVT<N, V, usize, AABB<N, P, V>> {
         &self.bvt
     }
 
     /// The shapes bounding volumes.
     #[inline]
-    pub fn bounding_volumes(&self) -> &[AABB<P>] {
+    pub fn bounding_volumes(&self) -> &[AABB<N, P, V>] {
         self.bvs.as_slice()
     }
 
     /// The AABB of the i-th shape compositing this compound.
     #[inline]
-    pub fn aabb_at(&self, i: usize) -> &AABB<P> {
+    pub fn aabb_at(&self, i: usize) -> &AABB<N, P, V> {
         &self.bvs[i]
     }
 }

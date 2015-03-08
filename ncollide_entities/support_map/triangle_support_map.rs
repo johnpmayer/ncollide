@@ -5,8 +5,8 @@ use shape::Triangle;
 use math::{Scalar, Point, Vect};
 
 
-#[old_impl_check]
-impl<N, P, V, M> SupportMap<P, V, M> for Triangle<P>
+
+impl<N, P, V, M> SupportMap<P, V, M> for Triangle<N, P>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N>,
@@ -41,7 +41,7 @@ impl<N, P, V, M> SupportMap<P, V, M> for Triangle<P>
     }
 }
 
-impl<P, V, M> PreferedSamplingDirections<V, M> for Triangle<P> {
+impl<N, P, V, M> PreferedSamplingDirections<V, M> for Triangle<N, P> {
     #[inline(always)]
     fn sample(&self, _: &M, _: &mut FnMut(V)) {
     }

@@ -7,7 +7,7 @@ use math::{Scalar, Point, Vect};
 
 
 /// Computes the AABB of an support mapped shape.
-pub fn implicit_shape_aabb<N, P, V, M, G>(m: &M, i: &G) -> AABB<P>
+pub fn implicit_shape_aabb<N, P, V, M, G>(m: &M, i: &G) -> AABB<N, P, V>
         where N: Scalar,
               P: Point<N, V>,
               V: Vect<N>,

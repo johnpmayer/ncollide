@@ -6,13 +6,13 @@ use shape::{Ball, Capsule, Compound, Cone, Convex, Cuboid, Cylinder, TriMesh, Po
 use inspection::Repr;
 
 
-impl<N, P, V, M> HasBoundingSphere<N, P, M> for Repr<N, P, V, M>
+impl<N, P, V, M> HasBoundingSphere<N, P, V, M> for Repr<N, P, V, M>
     where N: Scalar,
           P: Point<N, V>,
           V: Vect<N> + Translate<P>,
           M: Isometry<N, P, V> {
     #[inline]
-    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P> {
+    fn bounding_sphere(&self, m: &M) -> BoundingSphere<N, P, V> {
         let repr = self.repr();
 
         if let Some(b) = repr.downcast_ref::<Ball<N>>() {
@@ -27,10 +27,10 @@ impl<N, P, V, M> HasBoundingSphere<N, P, M> for Repr<N, P, V, M>
         else if let Some(c) = repr.downcast_ref::<Cone<N>>() {
             c.bounding_sphere(m)
         }
-        else if let Some(c) = repr.downcast_ref::<Convex<P>>() {
+        else if let Some(c) = repr.downcast_ref::<Convex<N, P>>() {
             c.bounding_sphere(m)
         }
-        else if let Some(c) = repr.downcast_ref::<Cuboid<V>>() {
+        else if let Some(c) = repr.downcast_ref::<Cuboid<N, V>>() {
             c.bounding_sphere(m)
         }
         else if let Some(c) = repr.downcast_ref::<Cylinder<N>>() {
@@ -42,13 +42,13 @@ impl<N, P, V, M> HasBoundingSphere<N, P, M> for Repr<N, P, V, M>
         else if let Some(p) = repr.downcast_ref::<Polyline<N, P, V>>() {
             p.bounding_sphere(m)
         }
-        else if let Some(p) = repr.downcast_ref::<Plane<V>>() {
+        else if let Some(p) = repr.downcast_ref::<Plane<N, V>>() {
             p.bounding_sphere(m)
         }
-        else if let Some(s) = repr.downcast_ref::<Segment<P>>() {
+        else if let Some(s) = repr.downcast_ref::<Segment<N, P>>() {
             s.bounding_sphere(m)
         }
-        else if let Some(t) = repr.downcast_ref::<Triangle<P>>() {
+        else if let Some(t) = repr.downcast_ref::<Triangle<N, P>>() {
             t.bounding_sphere(m)
         }
         else {
